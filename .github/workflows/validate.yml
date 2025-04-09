@@ -2,23 +2,21 @@ name: Validate Shell Script
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   shellcheck:
+    name: Run ShellCheck on scripts
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Run shellcheck and check for errors
-      run: |
-        echo "Running shellcheck on mi_script.sh"
-        shellcheck mi_script.sh
-        error_count=$(shellcheck mi_script.sh | wc -l)
-        echo "Shellcheck found $error_count issues."
-        if [ "$error_count" -gt 0 ]; then
-          echo "Shellcheck found errors. Failing the workflow."
-          exit 1
-        fi
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Run ShellCheck
+        run: shellcheck ./*.sh
+
